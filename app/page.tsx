@@ -2,6 +2,7 @@ export const metadata = {
   title: "Home",
   description: "this is the home page",
 };
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
@@ -12,13 +13,13 @@ export default function Home() {
         <div className="hero-content text-center">
           <div className="max-w-3xl">
             
-            <div className="badge badge-primary badge-lg mb-5">
-              Learn • Grow • Succeed
+            <div className="mb-10">
+              <Image src="/logo.png" alt="Logo" width={150} height={150} className="mr-2 inline-block" />
             </div>
 
-            <h1 className="text-5xl font-bold leading-tight md:text-6xl">
+            <h1 className="text-4xl font-bold leading-tight md:text-6xl">
               Build Your Future With
-              <span className="text-primary"> New Skills</span>
+              <span className="text-base-content/30"> New Skills</span>
             </h1>
 
             <p className="py-6 text-lg text-base-content/70">

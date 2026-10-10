@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { GoSun } from "react-icons/go";
 import { IoMoonOutline } from "react-icons/io5";
@@ -31,7 +32,14 @@ export default function Navbar() {
           </ul>
         </div>
 
-        <a className="btn btn-ghost text-xl">ToDo</a>
+          <Image
+                src="/logo.png"
+                alt="Logo"
+                width={50}
+                height={50}
+                
+              />
+       
       </div>
 
       {/* CENTER */}

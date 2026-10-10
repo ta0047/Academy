@@ -77,16 +77,16 @@ export default function About() {
 
         <div className="relative mx-auto max-w-7xl px-6 py-24 lg:px-8">
           <div className="max-w-3xl">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold">
               <Rocket size={17} />
               Building Skills for the Digital Future
             </div>
 
             <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
-              Learn Today.
-              <span className="block text-primary">
-                Build Tomorrow.
-              </span>
+              Learn Today
+              <p className="">
+                Build Tomorrow
+              </p>
             </h1>
 
             <p className="mt-6 max-w-2xl text-lg leading-8 opacity-75">

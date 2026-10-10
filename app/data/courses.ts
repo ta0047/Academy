@@ -47,6 +47,14 @@ export const courses = [
     description: "Explore the fundamentals of Artificial Intelligence and learn how modern AI technologies are being used to solve problems, automate tasks and build intelligent applications. The course combines AI concepts with practical tools and real-world examples",
     price:50000,
     image:"https://images.unsplash.com/photo-1744640326166-433469d102f2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGFydGlmaWNpYWwlMjBpbnRlbGxpZ2VuY2UlMjB0ZWNobm9sb2d5fGVufDB8fDB8fHww"
+  },
+  {
+    id:8,
+    title: "Networking",
+    description: "Learn the fundamentals of networking including IP addressing, routing, and switching. Build a strong foundation in network design and administration.",
+    price:45000,
+    image:"https://media.gettyimages.com/id/157168456/photo/blue-network-cables.jpg?s=612x612&w=gi&k=20&c=6EGoh4NWPkm7xpmt0-P-Z0fmLT6cco6qEmgGTjm1POU="
   }
+
 ];
   
