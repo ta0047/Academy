@@ -8,7 +8,6 @@ export async function POST(request: Request) {
   try {
     const { name, email, password } = await request.json();
 
-    // Validate required fields
     if (
       typeof name !== "string" ||
       typeof email !== "string" ||
@@ -26,7 +25,6 @@ export async function POST(request: Request) {
     const normalizedEmail = email.trim().toLowerCase();
     const normalizedName = name.trim();
 
-    // Basic email and password validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
       return NextResponse.json(
         { message: "Please enter a valid email address." },
@@ -50,7 +48,6 @@ export async function POST(request: Request) {
 
     await connectDB();
 
-    // Check whether the email is already registered
     const existingUser = await User.findOne({
       email: normalizedEmail,
     });
@@ -62,7 +59,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 12);
 
     await User.create({
