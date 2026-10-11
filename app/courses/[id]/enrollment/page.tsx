@@ -61,12 +61,12 @@ const course = searchParams.get("course") || "";
       <div className="card w-full max-w-xl bg-base-100 shadow-[0_0_15px_rgba(0,0,0,0.3)]">
         <div className="card-body">
 
-          <h1 className="text-3xl font-bold text-center">
+          <h1 className="text-xl font-bold text-center">
             Enroll Now
           </h1>
 
           {/* Course Applied For */}
-          <div className="mt-4">
+          <div className="mt-2">
             <label className="font-semibold">
               Course Applied For
             </label>
@@ -75,7 +75,7 @@ const course = searchParams.get("course") || "";
               type="text"
               value={formData.course}
               readOnly
-              className="input input-bordered w-full mt-2"
+              className="input input-bordered w-full mt-1"
             />
           </div>
 
@@ -120,7 +120,7 @@ const course = searchParams.get("course") || "";
               placeholder="Your Message"
               value={formData.message}
               onChange={handleChange}
-              className="textarea textarea-bordered w-full h-32"
+              className="textarea textarea-bordered w-full h-12"
               required
             />
 
