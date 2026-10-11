@@ -86,7 +86,7 @@ export default function RegisterPage() {
 
 <Link 
   href="/courses" 
-  className="group relative inline-flex items-center gap-4 rounded-2xl bg-gradient-to-r from-primary via-primary/90 to-secondary px-7 py-3.5 text-base font-medium text-white shadow-lg shadow-primary/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/40 active:translate-y-0"
+  className="group relative inline-flex items-center gap-4 rounded-2xl bg-linear-to-r from-primary via-primary/90 to-secondary px-7 py-3.5 text-base font-medium text-white shadow-lg shadow-primary/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/40 active:translate-y-0"
 >
   {/* Button Text & Label */}
   <span className="flex items-center gap-2.5">

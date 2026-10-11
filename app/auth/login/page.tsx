@@ -1,8 +1,7 @@
-
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 import type { FormEvent } from "react";
 
@@ -35,12 +34,15 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || data.error || "Login failed. Please try again.");
+        setError(
+          data.message || data.error || "Login failed. Please try again.",
+        );
         return;
       }
-
-      router.replace("/dashboard");
-      router.refresh();
+      window.location.href = "/dashboard";
+      //redirect("/dashboard");
+        //  router.replace("/dashboard");
+        //  router.refresh();
     } catch (error) {
       console.error("Login failed:", error);
       setError("Unable to connect to the server. Please try again.");
@@ -76,9 +78,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <p className="text-sm opacity-80">
-            Join learners growing every day
-          </p>
+          <p className="text-sm opacity-80">Join learners growing every day</p>
         </section>
 
         <section className="mx-auto w-full max-w-md">
@@ -96,7 +96,7 @@ export default function LoginPage() {
             <div className="card-body gap-6 p-6 sm:p-10">
               <div>
                 <h2 className="text-3xl font-bold tracking-tight">
-                  Sign in to your account
+                  Login 
                 </h2>
                 <p className="mt-2 text-sm text-base-content/60">
                   Enter your email and password to continue.
@@ -154,7 +154,7 @@ export default function LoginPage() {
                     </>
                   ) : (
                     <>
-                      Sign in <span aria-hidden="true">→</span>
+                      Login in <span aria-hidden="true">→</span>
                     </>
                   )}
                 </button>

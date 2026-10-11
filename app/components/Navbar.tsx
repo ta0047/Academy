@@ -7,21 +7,54 @@ import { IoMoonOutline } from "react-icons/io5";
 import { useTheme } from "./ThemeProvider";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
+import { AiOutlineLogout } from "react-icons/ai";
+
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const router = useRouter();
-  const handleLogout = async () => {
-    
-    try {
-      const response = await fetch("/api/auth/logout", { method: "POST" });
-      if (!response.ok) {
-        throw new Error("Logout failed");
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const response = await fetch("/api/auth/me", {
+          cache: "no-store",
+        });
+
+        setIsLoggedIn(response.ok);
+      } catch {
+        setIsLoggedIn(false);
+      } finally {
+        setIsCheckingAuth(false);
       }
-      router.replace("/auth/login");
-      toast.success("You have been logged out.");
-      router.refresh();
-    } catch {
-      console.error("Logout failed:", Error);
+    }
+
+    checkAuth();
+  }, []);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        setIsLoggedIn(false);
+        router.replace("/auth/login");
+        router.refresh();
+        toast.success("Logged out successfully.");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error("Failed to log out.");
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -37,9 +70,7 @@ export default function Navbar() {
             <li>
               <Link href="/">HOME</Link>
             </li>
-            <li>
-              <Link href="/courses">COURSES</Link>
-            </li>
+
             <li>
               <Link href="/about">ABOUT</Link>
             </li>
@@ -61,9 +92,7 @@ export default function Navbar() {
           <li>
             <Link href="/">HOME</Link>
           </li>
-          <li>
-            <Link href="/courses">COURSES</Link>
-          </li>
+
           <li>
             <Link href="/about">ABOUT</Link>
           </li>
@@ -82,13 +111,28 @@ export default function Navbar() {
             <IoMoonOutline className="w-5 h-5" />
           )}
         </button>
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="btn btn-sm border border-base-content"
-        >
-          Logout 
-        </button>
+
+        {!isCheckingAuth &&
+          (isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="btn btn-primary"
+            >
+              {isLoggingOut ? <span>Logging out...</span> : <AiOutlineLogout className="w-5 h-5" />}
+            </button>
+          ) : (
+            <>
+            
+              {/* <Link href="/auth/login" className="btn btn-outline">
+                Login
+              </Link>
+
+              <Link href="/auth/register" className="btn btn-primary">
+                Register
+              </Link> */}
+            </>
+          ))}
       </div>
     </div>
   );

@@ -1,105 +1,138 @@
-export const metadata = {
-  title: "Home",
-  description: "this is the home page",
-};
+
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+export const metadata: Metadata = {
+  title: "Academy | Build Your Future With New Skills",
+  description:
+    "Learn Web Development, Graphic Design, Python, Data Analysis, and AI with Academy.",
+};
+
+
+
+
 export default function Home() {
   return (
-    <main>
-      {/* Hero Section */}
-      <section className="hero min-h-[80vh] bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-3xl">
-            <div className="mb-10">
+
+<section className="relative overflow-hidden bg-base-100">
+  <div className="mx-auto grid min-h-[60vh] max-w-7xl px-6 md:grid-cols-2 md:px-10 lg:gap-2 lg:py-12">
+
+    {/* Left Column */}
+    <div className="text-center md:text-left">
+      
+
+      <h1 className="text-4xl font-extrabold leading-[1.15] tracking-tight text-base-content sm:text-5xl lg:text-6xl">
+        Build Your Future With{" "}
+        <span className="block text-primary">
+          Practical Skills.
+        </span>
+      </h1>
+
+      <p className="mx-auto mt-1 max-w-xl text-base leading-8 text-base-content/70 md:mx-0 md:text-lg">
+        Discover your potential with professional courses in Web Development,
+        Graphic Design, Python, Data Analysis, Artificial Intelligence, and more.
+        Learn by doing and take the next step toward your goals.
+      </p>
+
+      <div className="mt-1 flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
+        <Link
+          href="/courses"
+          className="group inline-flex items-center justify-center gap-3 rounded-xl bg-primary px-7 py-4 font-semibold text-primary-content shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+        >
+          Explore Courses
+          <span className="transition-transform group-hover:translate-x-1">
+            →
+          </span>
+        </Link>
+
+        <Link
+          href="/auth/login"
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-base-content/20 bg-base-100 px-7 py-4 font-semibold text-base-content transition duration-300 hover:border-primary hover:text-primary"
+        >
+          Student Portal <span>↗</span>
+        </Link>
+      </div>
+
+     
+    </div>
+
+    {/* Right Column */}
+    <div className="relative mx-auto w-full max-w-lg">
+      {/* Main Visual Panel */}
+      <div className="relative overflow-hidden rounded-3xl border border-base-content/10 bg-base-200 p-5 shadow-xl sm:p-8">
+
+        {/* Decorative shapes */}
+        <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-primary/5" />
+        <div className="absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-secondary/5" />
+
+        {/* Dashboard Header */}
+        <div className="relative flex items-center justify-around p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-20 w-20 items-center justify-center rounded-xl ">
               <Image
                 src="/logo.png"
-                alt="Logo"
-                width={150}
-                height={150}
-                className="mr-2 inline-block"
+                alt="Academy logo"
+                width={80}
+                height={80}
+                className="h-80 w-80 object-contain"
               />
             </div>
 
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">
-              <span className="block text-base-content">
-                Build Your Future With
-              </span>
+           
+          </div>
 
-              <Link href="/courses" className="t-6 inline-flex items-center gap-3 rounded-xl bg-gradient-to-r from-primary to-secondary px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-                New Skills
-              </Link>
+          
+        </div>
 
-              <span className="mt-5 block text-lg font-medium text-base-content/70 md:text-xl">
-                Your journey to success starts here.
-              </span>
+        {/* Main Card Content */}
+        <div className="relative py-3">
+             <h2 className="text-3xl font-extrabold leading-tight text-base-content sm:text-4xl">
+            Learn Something
+            <span className="block text-primary">Extraordinary.</span>
+          </h2>
 
-              <Link
-                href="/auth/login"
-                className="t-6 inline-flex items-center gap-3 rounded-xl bg-gradient-to-l from-primary to-secondary px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                Student Portal
-                <span className="rounded-lg bg-white/20 px-3 py-1 text-sm">
-                  Login →
-                </span>
-              </Link>
-            </h1>
+          <p className="mt-3 max-w-sm leading-7 text-base-content/70">
+            Turn new knowledge into real skills through technology,
+            creativity, and hands-on learning.
+          </p>
+        </div>
 
-            <p className="py-6 text-lg text-base-content/70">
-              Learn practical skills through our professional courses in Web
-              Development, Graphic Design, Python, Data Analysis, Artificial
-              Intelligence, and more.
+        {/* Learning Categories */}
+        <div className="relative grid grid-cols-2 gap-4">
+          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 transition duration-300 hover:-translate-y-1 hover:shadow-md sm:p-5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-2xl">
+              {"</>"}
+            </div>
+            <h3 className="mt-4 font-bold text-base-content">
+              Web Development
+            </h3>
+            <p className="mt-1 text-sm text-base-content/60">
+              Create modern websites
             </p>
+          </div>
 
-            <div className="flex flex-col justify-center gap-3 sm:flex-row">
-              <Link href="/courses" className="btn btn-primary btn-lg">
-                Explore Courses
-              </Link>
-
-              <Link href="/contact" className="btn btn-outline btn-lg">
-                Contact Us
-              </Link>
+          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 transition duration-300 hover:-translate-y-1 hover:shadow-md sm:p-5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-500/10 text-2xl">
+              ✦
             </div>
+            <h3 className="mt-4 font-bold text-base-content">
+              AI & Data
+            </h3>
+            <p className="mt-1 text-sm text-base-content/60">
+              Explore new possibilities
+            </p>
           </div>
         </div>
-      </section>
 
-      {/* Features */}
-      <section className="bg-base-100 py-16">
-        <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-3">
-          <div className="card bg-base-200 shadow-md">
-            <div className="card-body text-center">
-              <div className="text-4xl">💻</div>
-              <h2 className="card-title justify-center">Practical Learning</h2>
-              <p className="text-base-content/70">
-                Learn useful skills with practical and easy-to-follow training.
-              </p>
-            </div>
-          </div>
+        {/* Bottom Information */}
+       
+      </div>
+    </div>
 
-          <div className="card bg-base-200 shadow-md">
-            <div className="card-body text-center">
-              <div className="text-4xl">🎯</div>
-              <h2 className="card-title justify-center">Career Focused</h2>
-              <p className="text-base-content/70">
-                Develop skills that can help you move forward in your
-                professional career.
-              </p>
-            </div>
-          </div>
+  </div>
+</section>
 
-          <div className="card bg-base-200 shadow-md">
-            <div className="card-body text-center">
-              <div className="text-4xl">🚀</div>
-              <h2 className="card-title justify-center">Start Today</h2>
-              <p className="text-base-content/70">
-                Choose a course and start your learning journey today.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+
   );
 }
