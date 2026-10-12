@@ -79,7 +79,13 @@ export default function Navbar() {
             </li>
           </ul>
         </div>
-        <Image src="/logo.png" alt="Logo" width={50} height={50} />
+        <Image
+  src="/logo.png"
+  alt="Academy Logo"
+  width={50}
+  height={50}
+  className="w-10 h-auto"
+/>
         <div className="flex gap-0">
           <a className="font-bold">Apex Academy</a>
           <a className=""></a>

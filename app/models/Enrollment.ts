@@ -24,7 +24,11 @@ const EnrollmentSchema = new Schema(
     course:{
       type: String,
       required: true,
-    }
+    },
+    courseId: {
+      type: Schema.Types.ObjectId,
+      ref: "Course",
+    },
   },
   { timestamps: true },
 );

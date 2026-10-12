@@ -1,1 +1,4 @@
-no 20 05:00 data fetching
+export const metadata = {
+  title: "courses",
+  description: "this is the courses page",
+};
