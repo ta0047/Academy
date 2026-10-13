@@ -3,10 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import {
-  BookOpen,
-  Search,
-} from "lucide-react";
+import { BookOpen, Search } from "lucide-react";
+import { toast } from "react-toastify";
 
 type Enrollment = {
   _id: string;
@@ -62,7 +60,6 @@ export default function AcademyDashboard() {
       const response = await axios.get<Course[]>("/api/course");
       setAvailableCourses(response.data);
     } catch (error) {
-      console.error("Failed to load available courses:", error);
       setAddCourseError("Unable to load available courses. Please try again.");
     } finally {
       setIsLoadingCourses(false);
@@ -78,14 +75,15 @@ export default function AcademyDashboard() {
     try {
       await axios.post("/api/my-course", { courseId: selectedCourseId });
       await refreshEnrollments();
+      toast.success("Course added successfully!");
       setSelectedCourseId("");
-      (document.getElementById("add_course_dialog") as HTMLDialogElement | null)
-        ?.close();
+      (
+        document.getElementById("add_course_dialog") as HTMLDialogElement | null
+      )?.close();
     } catch (error) {
-      console.error("Failed to add course:", error);
       setAddCourseError(
         axios.isAxiosError(error)
-          ? error.response?.data?.message ?? "Unable to add this course."
+          ? (error.response?.data?.message ?? "Unable to add this course.")
           : "Unable to add this course.",
       );
     } finally {
@@ -101,7 +99,6 @@ export default function AcademyDashboard() {
         if (axios.isAxiosError(error) && error.response?.status === 401) {
           router.replace("/auth/login");
         } else {
-          console.error("Failed to load enrolled courses:", error);
           setEnrollmentError("Unable to load your enrolled courses.");
         }
       } finally {
@@ -158,12 +155,26 @@ export default function AcademyDashboard() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+         <div className="card bg-base-100 shadow-sm">
+            <div className="card-body p-5 ">
+              <div className="flex items-center justify-between">
+                <span className="text-md opacity-70">Student Name</span>
+                <div className="p-2 bg-primary/10 text-primary rounded-lg">
+                  <BookOpen className="h-4 w-4" />
+                </div>
+              </div>
+              <h2 className="card-title text-4xl mt-2 ">{studentName}</h2>
+            </div>
+          </div>
+
+
           {courses.map((courses) => {
             return (
               <div key={courses.name} className="card bg-base-100 shadow-sm">
                 <div className="card-body p-5">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm opacity-70">{courses.name}</span>
+                    <span className="text-md opacity-70">{courses.name}</span>
                     <div className="p-2 bg-primary/10 text-primary rounded-lg">
                       <BookOpen className="h-4 w-4" />
                     </div>
@@ -173,6 +184,7 @@ export default function AcademyDashboard() {
               </div>
             );
           })}
+         
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -255,12 +267,14 @@ export default function AcademyDashboard() {
                               </select>
                             </label>
                             {addCourseError && (
-                              <p className="mt-3 text-sm text-error" role="alert">
+                              <p
+                                className="mt-3 text-sm text-error"
+                                role="alert"
+                              >
                                 {addCourseError}
                               </p>
                             )}
                             <div className="card-actions justify-end pt-4">
-                             
                               <button
                                 type="submit"
                                 className="btn btn-primary w-full"
@@ -357,10 +371,7 @@ export default function AcademyDashboard() {
                   <div className="modal-box">
                     <form method="dialog">
                       {/* if there is a button in form, it will close the modal */}
-                      <button
-                        className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                        
-                      >
+                      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
                         ✕
                       </button>
                       <div className="card w-full max-w-md bg-base-100 mx-auto my-8 border border-base-200">
