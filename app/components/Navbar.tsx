@@ -10,31 +10,46 @@ import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import { AiOutlineLogout } from "react-icons/ai";
 
+
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [showShadow, setShowShadow] = useState(false);
 
   const router = useRouter();
 
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        const response = await fetch("/api/auth/me", {
-          cache: "no-store",
-        });
 
-        setIsLoggedIn(response.ok);
-      } catch {
-        setIsLoggedIn(false);
-      } finally {
-        setIsCheckingAuth(false);
-      }
+useEffect(() => {
+  const handleShadow = () => {
+    setShowShadow(window.scrollY > 0);
+  };
+
+  handleShadow();
+  window.addEventListener("scroll", handleShadow);
+
+  const checkAuth = async () => {
+    try {
+      const response = await fetch("/api/auth/me", {
+        cache: "no-store",
+      });
+
+      setIsLoggedIn(response.ok);
+    } catch {
+      setIsLoggedIn(false);
+    } finally {
+      setIsCheckingAuth(false);
     }
+  };
 
-    checkAuth();
-  }, []);
+  checkAuth();
+
+  return () => {
+    window.removeEventListener("scroll", handleShadow);
+  };
+}, []);
+
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -59,7 +74,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="sticky top-0 navbar bg-base-200 text-base-content shadow-sm z-50">
+    <div className={`sticky top-0 navbar bg-base-200 text-base-content z-50 transition-shadow ${showShadow ? "shadow-lg shadow-slate-500" : "shadow-none"}`}>
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

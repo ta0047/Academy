@@ -24,6 +24,13 @@ type Course = {
   image: string;
 };
 
+type ScheduledClass = {
+  _id: string;
+  courseName: string;
+  date: string;
+  time: string;
+};
+
 export default function AcademyDashboard() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,7 +42,11 @@ export default function AcademyDashboard() {
   const [selectedCourseId, setSelectedCourseId] = useState("");
   const [isLoadingCourses, setIsLoadingCourses] = useState(false);
   const [isAddingCourse, setIsAddingCourse] = useState(false);
+  const [isAddingSchedule, setIsAddingSchedule] = useState(false);
   const [addCourseError, setAddCourseError] = useState("");
+  const [addScheduleError, setAddScheduleError] = useState("");
+  const [scheduleError, setScheduleError] = useState("");
+  const [scheduledClasses, setScheduledClasses] = useState<ScheduledClass[]>([]);
 
   async function refreshEnrollments() {
     const response = await axios.get<{
@@ -46,23 +57,47 @@ export default function AcademyDashboard() {
     setEnrollments(response.data.enrollments);
   }
 
+  async function refreshSchedules() {
+    const response = await axios.get<{ schedules: ScheduledClass[] }>(
+      "/api/schedule",
+    );
+    setScheduledClasses(response.data.schedules);
+  }
+
+  async function loadAvailableCourses() {
+    if (availableCourses.length > 0) return;
+    setIsLoadingCourses(true);
+    try {
+      const response = await axios.get<Course[]>("/api/course");
+      setAvailableCourses(response.data);
+    } finally {
+      setIsLoadingCourses(false);
+    }
+  }
+
   async function openAddCourseDialog() {
     setAddCourseError("");
     const dialog = document.getElementById(
       "add_course_dialog",
     ) as HTMLDialogElement | null;
     dialog?.showModal();
-
-    if (availableCourses.length > 0) return;
-
-    setIsLoadingCourses(true);
     try {
-      const response = await axios.get<Course[]>("/api/course");
-      setAvailableCourses(response.data);
-    } catch (error) {
+      await loadAvailableCourses();
+    } catch {
       setAddCourseError("Unable to load available courses. Please try again.");
-    } finally {
-      setIsLoadingCourses(false);
+    }
+  }
+
+  async function openAddScheduleDialog() {
+    setAddScheduleError("");
+    const dialog = document.getElementById(
+      "my_modal_3",
+    ) as HTMLDialogElement | null;
+    dialog?.showModal();
+    try {
+      await loadAvailableCourses();
+    } catch {
+      setAddScheduleError("Unable to load available courses. Please try again.");
     }
   }
 
@@ -91,6 +126,47 @@ export default function AcademyDashboard() {
     }
   }
 
+  async function handleAddSchedule(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const courseId = formData.get("courseId");
+    const date = formData.get("date");
+    const time = formData.get("time");
+
+    if (
+      typeof courseId !== "string" ||
+      typeof date !== "string" ||
+      typeof time !== "string"
+    ) {
+      setAddScheduleError("Select a course, date, and time.");
+      return;
+    }
+
+    setAddScheduleError("");
+    setIsAddingSchedule(true);
+    try {
+      const response = await axios.post<{ schedule: ScheduledClass }>(
+        "/api/schedule",
+        { courseId, date, time },
+      );
+      setScheduledClasses((classes) => [...classes, response.data.schedule]);
+      toast.success("Schedule added successfully!");
+      form.reset();
+      (
+        document.getElementById("my_modal_3") as HTMLDialogElement | null
+      )?.close();
+    } catch (error) {
+      setAddScheduleError(
+        axios.isAxiosError(error)
+          ? (error.response?.data?.message ?? "Unable to add this schedule.")
+          : "Unable to add this schedule.",
+      );
+    } finally {
+      setIsAddingSchedule(false);
+    }
+  }
+
   useEffect(() => {
     async function loadDashboard() {
       try {
@@ -103,6 +179,12 @@ export default function AcademyDashboard() {
         }
       } finally {
         setIsLoading(false);
+      }
+
+      try {
+        await refreshSchedules();
+      } catch {
+        setScheduleError("Unable to load your saved schedule.");
       }
     }
     loadDashboard();
@@ -134,7 +216,7 @@ export default function AcademyDashboard() {
             <div className="flex-1">
               <div className="text-lg font-bold ">
                 Welcome{" "}
-                <span className="text-teal-500 uppercase">{studentName}</span>
+              
               </div>
             </div>
           </div>
@@ -161,10 +243,10 @@ export default function AcademyDashboard() {
               <div className="flex items-center justify-between">
                 <span className="text-md opacity-70">Student Name</span>
                 <div className="p-2 bg-primary/10 text-primary rounded-lg">
-                  <BookOpen className="h-4 w-4" />
+                  <BookOpen className="h-4 w-4 text-slate-500" />
                 </div>
               </div>
-              <h2 className="card-title text-4xl mt-2 ">{studentName}</h2>
+              <h2 className="card-title text-4xl mt-2 uppercase">{studentName}</h2>
             </div>
           </div>
 
@@ -176,7 +258,7 @@ export default function AcademyDashboard() {
                   <div className="flex items-center justify-between">
                     <span className="text-md opacity-70">{courses.name}</span>
                     <div className="p-2 bg-primary/10 text-primary rounded-lg">
-                      <BookOpen className="h-4 w-4" />
+                      <BookOpen className="h-4 w-4 text-slate-500" />
                     </div>
                   </div>
                   <h2 className="card-title text-4xl mt-2">{courses.value}</h2>
@@ -197,7 +279,7 @@ export default function AcademyDashboard() {
                 {/* Course Modal */}
                 <div className="space-y-3">
                   <button
-                    className="btn btn-primary btn-sm"
+                    className="btn btn-sm border border-slate-500 hover:bg-slate-500"
                     onClick={openAddCourseDialog}
                   >
                     Add Course
@@ -352,26 +434,27 @@ export default function AcademyDashboard() {
           <div className="card bg-base-100 shadow-sm">
             <div className="card-body p-5">
               <h2 className="card-title text-base font-bold mb-4">
-                Todays Schedule
+                Today&apos;s Schedule
               </h2>
-              {/* Schedule Class modal Button */}
-              <div className="space-y-3">
-                <button
-                  className="btn"
-                  onClick={() => {
-                    const modal = document.getElementById(
-                      "my_modal_3",
-                    ) as HTMLDialogElement | null;
-                    if (modal) modal.showModal();
-                  }}
-                >
+                <button className="btn border border-slate-300 text-xl hover:bg-slate-500" onClick={openAddScheduleDialog}>
                   +
                 </button>
+
+<div className="space-y-3">
                 <dialog id="my_modal_3" className="modal">
                   <div className="modal-box">
-                    <form method="dialog">
-                      {/* if there is a button in form, it will close the modal */}
-                      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                    <form onSubmit={handleAddSchedule}>
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                        onClick={() => {
+                          (
+                            document.getElementById(
+                              "my_modal_3",
+                            ) as HTMLDialogElement | null
+                          )?.close();
+                        }}
+                      >
                         ✕
                       </button>
                       <div className="card w-full max-w-md bg-base-100 mx-auto my-8 border border-base-200">
@@ -380,28 +463,32 @@ export default function AcademyDashboard() {
                             Schedule a Class
                           </h2>
 
-                          {/* Course */}
                           <div className=" w-full">
                             <label className="label">
                               <span className="label-text font-semibold">
-                                Course
+                                Course Name
                               </span>
                             </label>
                             <select
-                              name="course"
+                              name="courseId"
                               className="select select-bordered w-full"
+                              defaultValue=""
                               required
+                              disabled={isLoadingCourses}
                             >
                               <option value="" disabled>
-                                Select a course
+                                {isLoadingCourses
+                                  ? "Loading courses..."
+                                  : "Select a course"}
                               </option>
-                              <option value="react">React Development</option>
-                              <option value="python">Python Programming</option>
-                              <option value="ui-ux">UI/UX Design</option>
+                              {availableCourses.map((course) => (
+                                <option key={course._id} value={course._id}>
+                                  {course.title}
+                                </option>
+                              ))}
                             </select>
                           </div>
 
-                          {/* Date */}
                           <div className="form-control w-full">
                             <label className="label">
                               <span className="label-text font-semibold">
@@ -415,7 +502,6 @@ export default function AcademyDashboard() {
                               required
                             />
                           </div>
-                          {/* Time */}
                           <div className="form-control w-full">
                             <label className="label">
                               <span className="label-text font-semibold">
@@ -429,13 +515,18 @@ export default function AcademyDashboard() {
                               required
                             />
                           </div>
-                          {/* Actions */}
+                          {addScheduleError && (
+                            <p className="mt-3 text-sm text-error" role="alert">
+                              {addScheduleError}
+                            </p>
+                          )}
                           <div className="card-actions justify-end pt-4">
                             <button
                               type="submit"
                               className="btn btn-primary w-full"
+                              disabled={isLoadingCourses || isAddingSchedule}
                             >
-                              Schedule Class
+                              {isAddingSchedule ? "Adding..." : "Schedule Class"}
                             </button>
                           </div>
                         </div>
@@ -444,6 +535,32 @@ export default function AcademyDashboard() {
                   </div>
                 </dialog>
               </div>
+
+
+
+              {scheduleError && (
+                <p className="mb-4 text-sm text-error" role="alert">
+                  {scheduleError}
+                </p>
+              )}
+              {scheduledClasses.length > 0 && (
+                <ul className="mb-4 space-y-3">
+                  {scheduledClasses.map((scheduledClass) => (
+                    <li
+                      key={scheduledClass._id}
+                      className="rounded-lg bg-base-200 p-3"
+                    >  
+                      <p className="font-semibold text-red-400">
+                        {scheduledClass.courseName}
+                      </p>
+                      <p>Date & Time</p>
+                      <p className="text-sm opacity-70">
+                        {scheduledClass.date} at {scheduledClass.time}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>
